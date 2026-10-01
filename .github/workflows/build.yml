@@ -4,7 +4,7 @@ on:
     branches: [main]
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 jobs:
@@ -38,6 +38,11 @@ jobs:
         with:
           name: app-debug
           path: apk/android/app/build/outputs/apk/debug/app-debug.apk
+      - name: Rilis APK
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "apk-${{ github.run_number }}-${{ github.run_attempt }}" apk/android/app/build/outputs/apk/debug/app-debug.apk --title "APK debug #${{ github.run_number }}" --notes "APK debug Jember Operation Center"
   yakult:
     runs-on: ubuntu-latest
     steps:
