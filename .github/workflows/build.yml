@@ -45,8 +45,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - run: unzip -q yakult-jember-github-pages.zip -d yakult
       - run: npm install --legacy-peer-deps
-      - run: npm install
         working-directory: yakult
       - run: npm run build
         working-directory: yakult
