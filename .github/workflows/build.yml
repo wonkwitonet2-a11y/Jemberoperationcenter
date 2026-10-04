@@ -9,7 +9,8 @@ permissions:
   id-token: write
 jobs:
   apk:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -28,6 +29,12 @@ jobs:
         working-directory: apk
         run: |
           sed -i 's|<application|<uses-permission android:name="android.permission.CAMERA" />\n    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />\n    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />\n    <application|' android/app/src/main/AndroidManifest.xml
+      - name: Latar gelap status bar
+        working-directory: apk
+        run: |
+          F=android/app/src/main/res/values/styles.xml
+          sed -i 's|<item name="android:background">@null</item>|<item name="android:background">@null</item>\n        <item name="android:windowBackground">#0a0a0a</item>\n        <item name="android:statusBarColor">#0a0a0a</item>\n        <item name="android:navigationBarColor">#0a0a0a</item>|' $F
+          cat $F
       - run: npx cap sync android
         working-directory: apk
       - run: |
@@ -44,7 +51,7 @@ jobs:
         run: |
           gh release create "apk-${{ github.run_number }}-${{ github.run_attempt }}" apk/android/app/build/outputs/apk/debug/app-debug.apk --title "APK debug #${{ github.run_number }}" --notes "APK debug Jember Operation Center"
   yakult:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -60,7 +67,7 @@ jobs:
           path: yakult/dist
   deploy:
     needs: yakult
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
