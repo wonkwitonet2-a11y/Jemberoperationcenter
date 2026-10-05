@@ -27,6 +27,10 @@ jobs:
         working-directory: apk
         run: |
           sed -i 's/"appName": *"[^"]*"/"appName": "JOC"/' capacitor.config.json
+      - name: Sembunyikan panel debug
+        working-directory: apk
+        run: |
+          sed -i 's|<div id="dbg" |<div id="dbg" hidden |' www/index.html
       - run: npx cap add android
         working-directory: apk
       - name: Izin kamera dan lokasi
