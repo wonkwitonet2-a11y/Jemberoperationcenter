@@ -25,7 +25,8 @@ jobs:
         working-directory: apk
       - name: Nama aplikasi JOC
         working-directory: apk
-        run: sed -i 's/"appName": *"[^"]*"/"appName": "JOC"/' capacitor.config.json
+        run: |
+          sed -i 's/"appName": *"[^"]*"/"appName": "JOC"/' capacitor.config.json
       - run: npx cap add android
         working-directory: apk
       - name: Izin kamera dan lokasi
