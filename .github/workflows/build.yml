@@ -21,6 +21,8 @@ jobs:
           distribution: temurin
           java-version: 21
       - run: unzip -q jemberoperationcenter-apk-debug.zip -d apk
+      - name: Pakai index.html perbaikan
+        run: cp joc-index.html apk/www/index.html
       - run: npm install
         working-directory: apk
       - name: Nama aplikasi JOC
