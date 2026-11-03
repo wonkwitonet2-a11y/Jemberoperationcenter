@@ -203,6 +203,17 @@ input:focus,button:focus-visible{outline:3px solid #8db1de;outline-offset:1px}
       if(typeof d.u==="string" && typeof d.k==="string" && d.u && d.k) store.set("joc_cred",JSON.stringify({u:d.u,k:d.k,locked:!!d.locked}));
     }
     else if(d.type==="yk-cred-clear"){try{localStorage.removeItem("joc_cred")}catch(x){}}
+    else if(d.type==="yk-clip"){
+      // Jembatan clipboard: aplikasi di dalam iframe tidak boleh membaca clipboard di WebView, jadi shell yang membacakan.
+      var CB=window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.Clipboard;
+      var rep=function(o){o.type="yk-clip-result";o.id=d.id;try{frame.contentWindow.postMessage(o,origin||"*")}catch(x){}};
+      if(!CB){rep({ok:false});return}
+      if(d.op==="read"){
+        CB.read().then(function(r){rep({ok:true,text:(r&&typeof r.value==="string")?r.value:""})}).catch(function(){rep({ok:false})});
+      }else if(d.op==="write"&&typeof d.text==="string"){
+        CB.write({string:d.text}).then(function(){rep({ok:true})}).catch(function(){rep({ok:false})});
+      }else rep({ok:false});
+    }
     else if(d.type==="yk-cred-get"){
       var raw=store.get("joc_cred"); if(!raw) return;
       try{
