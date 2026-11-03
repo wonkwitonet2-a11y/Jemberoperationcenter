@@ -25,6 +25,9 @@ jobs:
         run: cp joc-index.html apk/www/index.html
       - run: npm install
         working-directory: apk
+      - name: Plugin clipboard (untuk tombol Tempel)
+        run: npm install @capacitor/clipboard@latest
+        working-directory: apk
       - name: Nama aplikasi JOC
         working-directory: apk
         run: |
